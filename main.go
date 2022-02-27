@@ -119,13 +119,12 @@ func SpamThread(URL string, Method string, HeaderSize int, HPR int, OnlyDown str
 			if resp.StatusCode == 200 {
 				if OnlyDown == "n" || OnlyDown == "N" {
 
-					log.Println("[ " + URL + " ]- OK")
+					log.Println("[ "+URL+" ] - OK - ", resp.StatusCode)
 				}
-				LastRespond = time.Now()
 			} else {
-				log.Println(resp.StatusCode)
-				NotResponded(URL)
+				log.Println("[ "+URL+" ] - OK - !!! - CAN BE CLOUDFLARE - ", resp.StatusCode)
 			}
+			LastRespond = time.Now()
 		}
 	}
 }

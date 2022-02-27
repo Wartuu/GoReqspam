@@ -5,6 +5,9 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 )
 
@@ -84,8 +87,22 @@ func main() {
 		}
 	}
 
+	c := make(chan os.Signal)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	var StartedAt = time.Now()
 	for {
+		<-c
 
+		fmt.Print("\n\n\n=============================================================\n")
+
+		fmt.Println("Runtime                  - ", time.Now().Sub(StartedAt))
+		fmt.Println("Done rCode:200 requests  - ", FinishDone200)
+		fmt.Println("Dome rCode!200 requests  - ", FinishNot200)
+		fmt.Println("request summary          - ", FinishDone200+FinishNot200)
+
+		fmt.Print("=============================================================\n")
+
+		os.Exit(0)
 	}
 }
 
@@ -116,12 +133,15 @@ func SpamThread(URL string, Method string, HeaderSize int, HPR int, OnlyDown str
 		if err != nil {
 			NotResponded(URL)
 		} else {
+			FinishSendSuccessRequests++
 			if resp.StatusCode == 200 {
+				FinishDone200++
 				if OnlyDown == "n" || OnlyDown == "N" {
 
 					log.Println("[ "+URL+" ] - OK - ", resp.StatusCode)
 				}
 			} else {
+				FinishNot200++
 				log.Println("[ "+URL+" ] - OK - !!! - CAN BE CLOUDFLARE - ", resp.StatusCode)
 			}
 			LastRespond = time.Now()
@@ -143,3 +163,7 @@ func NotResponded(URL string) {
 	duration := time.Now().Sub(LastRespond)
 	log.Printf("[ " + URL + " ] - is down from " + string(duration.String()) + "\n")
 }
+
+var FinishSendSuccessRequests int64 = 0
+var FinishDone200 int64 = 0
+var FinishNot200 int64 = 0

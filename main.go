@@ -187,7 +187,6 @@ func NotResponded(URL string) {
 }
 
 func HTTP_FLOOD(URL string, Method string, HeaderSize int, HPR int, OnlyDown string, CustomHeaderName []string, CustomHeaderBody []string, ShowOutput string) {
-
 	req, err := http.NewRequest(Method, URL, nil)
 
 	if err != nil {

